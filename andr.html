@@ -2,407 +2,313 @@
 <html lang="vi">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Get Key - LQM Android</title>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>Cập nhật bắt buộc · AOV Android V2</title>
 <style>
-  :root {
-    --bg-color: #F0F4F0;
-    --card-bg: #FFFFFF;
-    --text-primary: #191C1A;
-    --text-secondary: #404943;
-    --separator: #E0E4E0;
-    --active-bg: #E8F0E8;
-    --btn-main: #2E7D32;
-    --btn-done: #388E3C;
-    --orange: #EF6C00;
-    --orange-tint: rgba(239, 108, 0, 0.14);
-    --red: #D32F2F;
-    --blue-icon: #0288D1;
-    --modal-bg: #FFFFFF;
-    --modal-overlay: rgba(0, 0, 0, 0.5);
-    --btn-shadow: 0 4px 12px rgba(46, 125, 50, 0.25);
-    --theme-btn-bg: #FFFFFF;
-    --card-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  :root{
+    --bg:#0A0E14;
+    --surface:#121826;
+    --surface-2:#1A2333;
+    --line:#232E42;
+    --cyan:#22D3EE;
+    --amber:#FFB020;
+    --red:#FF5D5D;
+    --green:#3DDC84;
+    --text:#E7EDF5;
+    --muted:#8B97AC;
+    --mono:'JetBrains Mono', ui-monospace, 'SFMono-Regular', Menlo, monospace;
+    --sans:'Space Grotesk', 'Inter', system-ui, sans-serif;
+    --body:'Inter', system-ui, sans-serif;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html,body{height:100%;}
+  body{
+    background:
+      radial-gradient(1200px 600px at 50% -10%, rgba(34,211,238,0.10), transparent 60%),
+      var(--bg);
+    color:var(--text);
+    font-family:var(--body);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    min-height:100vh;
+    padding:24px;
+    overflow:hidden;
   }
 
-  body.dark-mode {
-    --bg-color: #121412;
-    --card-bg: #1E201E;
-    --text-primary: #E1E3E0;
-    --text-secondary: #8B938C;
-    --separator: #3F4943;
-    --active-bg: #2D312E;
-    --btn-main: #4CAF50;
-    --btn-done: #66BB6A;
-    --orange: #FFA726;
-    --orange-tint: rgba(255, 167, 38, 0.18);
-    --red: #EF5350;
-    --blue-icon: #29B6F6;
-    --modal-bg: #1E201E;
-    --modal-overlay: rgba(0, 0, 0, 0.7);
-    --btn-shadow: 0 4px 12px rgba(76, 175, 80, 0.2);
-    --theme-btn-bg: #2D312E;
-    --card-shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
+  .card{
+    width:100%;
+    max-width:420px;
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:20px;
+    padding:32px 24px 28px;
+    position:relative;
+    box-shadow:0 40px 80px -20px rgba(0,0,0,0.6);
   }
 
-  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-
-  body {
-    background-color: var(--bg-color);
-    font-family: "Roboto", -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
-    display: flex; justify-content: center; align-items: flex-start;
-    min-height: 100vh; padding: 22px 14px;
-    transition: background-color 0.4s ease, color 0.4s ease;
-    overflow-x: hidden;
+  .eyebrow{
+    font-family:var(--mono);
+    font-size:11px;
+    letter-spacing:0.14em;
+    color:var(--amber);
+    text-align:center;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:8px;
+    margin-bottom:22px;
+  }
+  .eyebrow::before, .eyebrow::after{
+    content:'';
+    width:14px; height:1px;
+    background:var(--line);
   }
 
-  .android-container { width: 100%; max-width: 400px; margin: 0 auto; }
-
-  /* ===== NÚT ĐỔI THEME ===== */
-  .theme-toggle-btn {
-    position: absolute; top: 14px; right: 14px;
-    width: 38px; height: 38px; border-radius: 50%;
-    background-color: var(--theme-btn-bg); color: var(--text-primary);
-    border: none; font-size: 16px; display: flex; justify-content: center; align-items: center;
-    cursor: pointer; box-shadow: var(--card-shadow);
-    transition: background-color 0.4s ease, color 0.4s ease, transform 0.2s;
-    z-index: 100; opacity: 0;
-    animation: dropDownSpring 0.7s cubic-bezier(0.34,1.56,0.64,1) forwards 0.2s;
+  /* ---- signature: radar ping behind app icon ---- */
+  .icon-wrap{
+    position:relative;
+    width:104px; height:104px;
+    margin:0 auto 22px;
+    display:flex; align-items:center; justify-content:center;
   }
-  @keyframes dropDownSpring {
-    0% { opacity: 0; transform: translateY(-30px) scale(0.8); }
-    100% { opacity: 1; transform: translateY(0) scale(1); }
+  .ring{
+    position:absolute;
+    inset:0;
+    border-radius:50%;
+    border:1px solid rgba(34,211,238,0.35);
+    animation:ping 2.4s cubic-bezier(0.2,0.7,0.3,1) infinite;
   }
-  .theme-toggle-btn:active { transform: scale(0.85) !important; }
-
-  /* ===== ANIMATION XUẤT HIỆN ===== */
-  .pop-in { opacity: 0; animation: springPop 0.7s cubic-bezier(0.34,1.56,0.64,1) forwards; }
-  .delay-1 { animation-delay: 0.05s; } .delay-2 { animation-delay: 0.10s; }
-  .delay-3 { animation-delay: 0.15s; } .delay-4 { animation-delay: 0.20s; }
-  .delay-5 { animation-delay: 0.25s; } .delay-6 { animation-delay: 0.30s; }
-  @keyframes springPop {
-    0% { opacity: 0; transform: translateY(28px) scale(0.92); }
-    100% { opacity: 1; transform: translateY(0) scale(1); }
+  .ring.r2{ animation-delay:0.8s; }
+  .ring.r3{ animation-delay:1.6s; }
+  @keyframes ping{
+    0%{ transform:scale(0.55); opacity:0.9; }
+    100%{ transform:scale(1.45); opacity:0; }
   }
-  @media (prefers-reduced-motion: reduce) {
-    * { animation-duration: 0.01ms !important; animation-delay: 0s !important; transition-duration: 0.01ms !important; }
+  @media (prefers-reduced-motion: reduce){
+    .ring{ animation:none; opacity:0.25; }
   }
-
-  /* ===== HEADER GỌN ===== */
-  .header-group { display: flex; align-items: center; justify-content: center; gap: 10px; margin: 6px 0 18px; }
-  .glow-wrapper {
-    position: relative; width: 40px; height: 40px; border-radius: 10px;
-    display: flex; justify-content: center; align-items: center; flex-shrink: 0; z-index: 1;
+  .icon-core{
+    width:72px; height:72px;
+    border-radius:18px;
+    background:linear-gradient(155deg, var(--surface-2), var(--surface));
+    border:1px solid var(--line);
+    display:flex; align-items:center; justify-content:center;
+    position:relative; z-index:2;
+    overflow:hidden;
   }
-  .glow-wrapper::before {
-    content: ""; position: absolute; inset: -3px; border-radius: 13px;
-    background: linear-gradient(130deg,#4CAF50,#00BCD4,#8BC34A,#0288D1,#4CAF50);
-    background-size: 300% 300%; z-index: -1; filter: blur(7px); opacity: 0.9;
-    animation: androidGlow 3s linear infinite;
-  }
-  @keyframes androidGlow {
-    0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; }
-  }
-  .header-icon {
-    width: 100%; height: 100%; border-radius: 10px; object-fit: cover;
-    z-index: 2; background-color: var(--card-bg); transition: background-color 0.4s ease;
-  }
-  h1 {
-    font-size: 20px; font-weight: 800; color: var(--text-primary); line-height: 1.2;
-    opacity: 0; animation: textRunOut 0.7s cubic-bezier(0.34,1.56,0.64,1) forwards 0.1s;
-    transition: color 0.4s ease;
-  }
-  @keyframes textRunOut {
-    0% { opacity: 0; transform: translateX(-60px); }
-    100% { opacity: 1; transform: translateX(0); }
+  .icon-core img{
+    width:100%; height:100%;
+    object-fit:cover;
+    display:block;
   }
 
-  /* ===== TIÊU ĐỀ SECTION + PROGRESS ===== */
-  .section-head {
-    display: flex; justify-content: space-between; align-items: center;
-    font-size: 13px; font-weight: 700; color: var(--text-secondary);
-    margin: 0 4px 6px; transition: color 0.4s ease;
+  h1{
+    font-family:var(--sans);
+    font-weight:600;
+    font-size:21px;
+    line-height:1.35;
+    text-align:center;
+    margin-bottom:8px;
   }
-  .progress-track {
-    width: 100%; height: 6px; background-color: var(--separator);
-    border-radius: 3px; overflow: hidden; margin-bottom: 10px;
-    transition: background-color 0.4s ease;
+  .sub{
+    font-size:14px;
+    line-height:1.6;
+    color:var(--muted);
+    text-align:center;
+    margin-bottom:20px;
   }
-  .progress-fill {
-    height: 100%; width: 0%; background-color: var(--btn-main); border-radius: 3px;
-    transition: width 0.4s cubic-bezier(0.25,0.1,0.25,1), background-color 0.4s ease;
+  .sub b{ color:var(--text); font-weight:600; }
+
+  /* version diff chip, git-diff styled */
+  .diff{
+    font-family:var(--mono);
+    font-size:12.5px;
+    background:#0D1420;
+    border:1px solid var(--line);
+    border-radius:10px;
+    padding:10px 14px;
+    margin-bottom:18px;
+  }
+  .diff div{ display:flex; align-items:center; gap:8px; padding:2px 0; }
+  .diff .old{ color:var(--red); }
+  .diff .new{ color:var(--green); }
+  .diff span.mark{ width:12px; opacity:0.8; }
+
+  .changelog{ margin-bottom:24px; }
+  .changelog .label{
+    font-family:var(--mono);
+    font-size:10.5px;
+    letter-spacing:0.1em;
+    color:var(--muted);
+    margin-bottom:8px;
+  }
+  .changelog ul{ list-style:none; }
+  .changelog li{
+    font-size:13.5px;
+    color:var(--text);
+    padding-left:18px;
+    position:relative;
+    margin-bottom:6px;
+    line-height:1.5;
+  }
+  .changelog li::before{
+    content:'▸';
+    position:absolute; left:0; top:0;
+    color:var(--cyan);
   }
 
-  /* ===== DANH SÁCH NHIỆM VỤ (CARD MATERIAL) ===== */
-  .android-list-container { display: flex; flex-direction: column; gap: 8px; margin-bottom: 18px; }
-  .android-list-item {
-    display: flex; align-items: center; width: 100%; padding: 13px 14px;
-    background-color: var(--card-bg); border: none; border-radius: 14px;
-    text-align: left; font-size: 15px; cursor: pointer;
-    box-shadow: var(--card-shadow); transition: all 0.2s ease;
+  .cta{
+    display:block;
+    width:100%;
+    text-align:center;
+    text-decoration:none;
+    background:var(--cyan);
+    color:#06222A;
+    font-family:var(--sans);
+    font-weight:600;
+    font-size:15px;
+    padding:14px 18px;
+    border-radius:12px;
+    border:none;
+    cursor:pointer;
+    transition:transform .15s ease, box-shadow .15s ease;
+    box-shadow:0 8px 24px -8px rgba(34,211,238,0.55);
   }
-  .android-list-item:active:not(:disabled) { transform: scale(0.98); background-color: var(--active-bg); }
-  .android-list-item:disabled { cursor: not-allowed; opacity: 0.8; }
+  .cta:active{ transform:scale(0.98); }
+  .cta:focus-visible{ outline:2px solid var(--cyan); outline-offset:3px; }
 
-  .icon-box {
-    width: 32px; height: 32px; border-radius: 50%;
-    display: flex; justify-content: center; align-items: center;
-    color: white; font-size: 15px; margin-right: 12px; flex-shrink: 0;
-    transition: opacity 0.3s ease, background-color 0.4s ease;
+  .foot{
+    margin-top:14px;
+    text-align:center;
+    font-size:12px;
+    color:var(--muted);
+    font-family:var(--mono);
   }
-  .bg-youtube  { background-color: var(--red); }
-  .bg-telegram { background-color: var(--blue-icon); }
-  .bg-tiktok   { background-color: #010101; }
-  .bg-discord  { background-color: #5865F2; }
-
-  .item-text { flex-grow: 1; color: var(--text-primary); font-weight: 600; transition: color 0.4s ease; }
-  .item-status { color: var(--text-secondary); font-size: 13px; margin-right: 8px; transition: color 0.4s ease; }
-  .item-chevron { color: var(--text-secondary); font-size: 13px; opacity: 0.6; transition: color 0.4s ease; }
-  .android-list-item.done .icon-box { background-color: var(--btn-done); }
-  .android-list-item.done .item-text { color: var(--btn-done); }
-  .android-list-item.done .item-chevron { color: var(--btn-done); opacity: 1; }
-
-  /* ===== NÚT MỞ KHOÁ ===== */
-  .btn-unlock {
-    width: 100%; border: none; border-radius: 14px; padding: 14px;
-    font-size: 15px; font-weight: 700; margin-bottom: 10px;
-    display: flex; justify-content: center; align-items: center; gap: 8px;
-    background-color: var(--active-bg); color: var(--text-secondary);
-    cursor: not-allowed; transition: all 0.3s ease;
-  }
-  .btn-unlock.active { cursor: pointer; animation: pulseOnce 0.6s ease 1; }
-  .btn-unlock.active:active { transform: scale(0.97); }
-  .btn-unlock.style-main.active { background-color: var(--btn-main); color: #fff; box-shadow: var(--btn-shadow); }
-  .btn-unlock.style-ads.active  { background-color: var(--orange-tint); color: var(--orange); }
-  @keyframes pulseOnce {
-    0% { transform: scale(1); } 50% { transform: scale(1.03); } 100% { transform: scale(1); }
-  }
-
-  /* ===== VIDEO HƯỚNG DẪN ===== */
-  .help-links { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px 16px; margin-top: 14px; }
-  .help-btn {
-    background: none; border: none; color: var(--btn-main); font-size: 13px;
-    font-weight: 600; cursor: pointer; display: flex; align-items: center;
-    gap: 6px; transition: color 0.4s ease;
-  }
-  .help-btn:active { opacity: 0.6; transform: scale(0.95); }
-
-  /* ===== MODAL VIDEO ===== */
-  .modal-overlay {
-    display: none; position: fixed; inset: 0;
-    background-color: var(--modal-overlay); z-index: 9999;
-    justify-content: center; align-items: center; padding: 20px;
-    backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px);
-  }
-  .modal-content {
-    width: 100%; max-width: 400px; background: var(--modal-bg);
-    border-radius: 20px; overflow: hidden; display: flex; flex-direction: column;
-    animation: zoomIn 0.3s cubic-bezier(0.175,0.885,0.32,1.1);
-  }
-  @keyframes zoomIn {
-    from { opacity: 0; transform: scale(0.9); }
-    to { opacity: 1; transform: scale(1); }
-  }
-  .video-container { position: relative; padding-bottom: 56.25%; height: 0; background: #000; }
-  .video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; }
-  .modal-close-btn {
-    background-color: transparent; color: var(--btn-main); border: none;
-    border-top: 0.5px solid var(--separator); padding: 15px; font-size: 15px;
-    font-weight: 700; cursor: pointer;
-  }
-  .modal-close-btn:active { background-color: var(--active-bg); }
+  .foot b{ color:var(--amber); }
 </style>
 </head>
 <body>
 
-<button class="theme-toggle-btn" id="themeToggleBtn">
-  <i class="fa-solid fa-moon" id="themeIcon"></i>
-</button>
+<div class="card" role="alertdialog" aria-labelledby="title" aria-describedby="desc">
+  <div class="eyebrow">AOV ANDROID V2 · CẬP NHẬT BẮT BUỘC</div>
 
-<div class="android-container">
-
-  <div class="header-group">
-    <div class="glow-wrapper pop-in delay-1">
-      <img src="https://ipas.cc/_next/image?url=https%3A%2F%2Fdl.ipas.cc%2Ficons%2F1779284211204-IMG_7418.jpeg&w=384&q=75" alt="Game Logo" class="header-icon">
+  <div class="icon-wrap">
+    <div class="ring r1"></div>
+    <div class="ring r2"></div>
+    <div class="ring r3"></div>
+    <div class="icon-core">
+      <img src="https://ipas.cc/_next/image?url=https%3A%2F%2Fdl.ipas.cc%2Ficons%2F1779284211204-IMG_7418.jpeg&w=384&q=75" alt="AOV Android V2" draggable="false">
     </div>
-    <h1>Get Key LQM Android</h1>
   </div>
 
-  <div class="section-head pop-in delay-2">
-    <span>Nhiệm vụ</span>
-    <span id="progressText">0 / 4</span>
-  </div>
-  <div class="progress-track pop-in delay-2">
-    <div class="progress-fill" id="progressFill"></div>
-  </div>
+  <h1 id="title">⚠️ Bắt buộc cập nhật AOV Android V2</h1>
+  <p class="sub" id="desc"><b>AOV Android V2</b> đã có phiên bản mới — phiên bản cũ không còn hoạt động. Vui lòng cập nhật ngay để tiếp tục sử dụng.</p>
 
-  <div class="android-list-container pop-in delay-3">
-    <button class="android-list-item" id="task1" onclick="completeTask(1, 'https://www.tiktok.com/@vanman250710')">
-      <div class="icon-box bg-tiktok">
-        <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor">
-          <path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.33-6.34V8.69a8.18 8.18 0 004.78 1.52V6.76a4.85 4.85 0 01-1.01-.07z"/>
-        </svg>
-      </div>
-      <span class="item-text">Follow TikTok</span>
-      <span class="item-status" id="status-task1"></span>
-      <i class="fa-solid fa-chevron-right item-chevron" id="icon-task1"></i>
-    </button>
+  <div class="diff" id="versionDiff"><!-- filled by JS from CONFIG --></div>
 
-    <button class="android-list-item" id="task2" disabled onclick="completeTask(2, 'https://discord.gg/tumadam')">
-      <div class="icon-box bg-discord"><i class="fa-brands fa-discord"></i></div>
-      <span class="item-text">Tham gia Discord</span>
-      <span class="item-status" id="status-task2"></span>
-      <i class="fa-solid fa-chevron-right item-chevron" id="icon-task2"></i>
-    </button>
-
-    <button class="android-list-item" id="task3" disabled onclick="completeTask(3, 'https://youtube.com/@ntmoba1265')">
-      <div class="icon-box bg-youtube"><i class="fa-brands fa-youtube"></i></div>
-      <span class="item-text">Đăng Ký Kênh YouTube</span>
-      <span class="item-status" id="status-task3"></span>
-      <i class="fa-solid fa-chevron-right item-chevron" id="icon-task3"></i>
-    </button>
-
-    <button class="android-list-item" id="task4" disabled onclick="completeTask(4, 'https://t.me/tumadammod1')">
-      <div class="icon-box bg-telegram"><i class="fa-brands fa-telegram"></i></div>
-      <span class="item-text">Vào nhóm Telegram</span>
-      <span class="item-status" id="status-task4"></span>
-      <i class="fa-solid fa-chevron-right item-chevron" id="icon-task4"></i>
-    </button>
+  <div class="changelog">
+    <div class="label">CÓ GÌ MỚI</div>
+    <ul id="changelogList"><!-- filled by JS from CONFIG --></ul>
   </div>
 
-  <div class="section-head pop-in delay-4"><span>Mở khoá key</span></div>
-
-  <button class="btn-unlock style-main pop-in delay-4" id="unlockBtn1" disabled onclick="goUnlock('main')">
-    <i class="fa-solid fa-lock" id="unlockIcon1"></i> Mở khoá Link Chính
-  </button>
-
-
-
-  <div class="help-links pop-in delay-6">
-    <button class="help-btn" onclick="openVideo(HD_VIDEOS.main)">
-      <i class="fa-solid fa-circle-play"></i> HD Link Chính
-    </button>
-  </div>
-
-</div>
-
-<div id="videoModal" class="modal-overlay" onclick="if(event.target===this)closeVideo()">
-  <div class="modal-content">
-    <div class="video-container">
-      <iframe id="youtubeIframe" src="" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-    </div>
-    <button class="modal-close-btn" onclick="closeVideo()">Đóng Video</button>
-  </div>
+  <a class="cta" id="updateBtn" href="#" rel="noopener">Cập nhật ngay</a>
+  <div class="foot" id="footNote"></div>
 </div>
 
 <script>
-/* ================= CẤU HÌNH LINK (sửa tại đây) ================= */
-const UNLOCK_LINKS = {
-  main: 'https://vipmodpro.com/free-key/keytumadam',
-  }
+/* ============ CẤU HÌNH — chỉ cần sửa ở đây ============ */
+const CONFIG = {
+  APP_NAME: "AOV Android V2",
+  OLD_VERSION: "v2.0.1",
+  NEW_VERSION: "v2.1.0",
+  CHANGELOG: [
+    "Thêm nhiều skin mới Season mới nhất",
+    "Fix lỗi crash khi vào trận rank",
+    "Tối ưu hiệu suất, giảm giật lag",
+    "Cải thiện độ ổn định khi load skin"
+  ],
 
-const HD_VIDEOS = {
-  main: 'https://pub-8851b5874408441f85670cfe38ce6aa7.r2.dev/video%20hd/copy_D9B62E8E-EDE2-422A-BFA6-266509F30DA8.mov',
-  ads:  'https://cdn.tumadam.com/files/91fb6774-04bb-4a64-8a8e-0ee5d688c9e5.mov'  // <-- thay bằng video HD vượt link ads
+  // Link mặc định (desktop / fallback)
+  UPDATE_URL: "https://tumadam.com",
+
+  // Có thể trỏ link khác nhau theo nền tảng — để trống nếu không cần
+  UPDATE_URL_IOS: "",
+  UPDATE_URL_ANDROID: "",
+
+  // Tự động chuyển trang sau N giây (0 = tắt, chỉ dùng nút bấm)
+  AUTO_REDIRECT_SECONDS: 0,
+
+  // Chặn nút back của trình duyệt để buộc người dùng cập nhật
+  BLOCK_BACK_BUTTON: true
 };
-/* =============================================================== */
+/* ======================================================== */
 
-function goUnlock(key) {
-  location.href = UNLOCK_LINKS[key];
+function detectPlatform(){
+  const ua = navigator.userAgent || "";
+  if (/iPhone|iPad|iPod/i.test(ua)) return "ios";
+  if (/Android/i.test(ua)) return "android";
+  return "other";
 }
 
-/* ===== AUTO RELOAD KHI VÀO LẠI TRANG (fix BFCache) ===== */
-window.addEventListener('pageshow', function (e) {
-  const nav = performance.getEntriesByType('navigation')[0];
-  if (e.persisted || (nav && nav.type === 'back_forward')) {
-    location.reload();
-  }
-});
-
-/* ===== THEME ===== */
-const themeToggleBtn = document.getElementById('themeToggleBtn');
-const themeIcon = document.getElementById('themeIcon');
-
-function getSavedTheme() { try { return localStorage.getItem('user-theme'); } catch (e) { return null; } }
-function saveTheme(v)    { try { localStorage.setItem('user-theme', v); } catch (e) {} }
-
-function setTheme(isDark) {
-  if (isDark) {
-    document.body.classList.add('dark-mode');
-    themeIcon.className = 'fa-solid fa-sun';
-    themeIcon.style.color = '#FBC02D';
-  } else {
-    document.body.classList.remove('dark-mode');
-    themeIcon.className = 'fa-solid fa-moon';
-    themeIcon.style.color = '#333';
-  }
+function resolveUpdateUrl(){
+  const platform = detectPlatform();
+  if (platform === "ios" && CONFIG.UPDATE_URL_IOS) return CONFIG.UPDATE_URL_IOS;
+  if (platform === "android" && CONFIG.UPDATE_URL_ANDROID) return CONFIG.UPDATE_URL_ANDROID;
+  return CONFIG.UPDATE_URL;
 }
-function isNight() { const h = new Date().getHours(); return h >= 18 || h < 6; }
 
-const savedTheme = getSavedTheme();
-setTheme(savedTheme ? savedTheme === 'dark' : isNight());
+function render(){
+  // version diff
+  const diffEl = document.getElementById("versionDiff");
+  diffEl.innerHTML = `
+    <div class="old"><span class="mark">−</span>${CONFIG.OLD_VERSION}</div>
+    <div class="new"><span class="mark">+</span>${CONFIG.NEW_VERSION}</div>
+  `;
 
-themeToggleBtn.addEventListener('click', () => {
-  const dark = !document.body.classList.contains('dark-mode');
-  setTheme(dark);
-  saveTheme(dark ? 'dark' : 'light');
-});
+  // changelog
+  const listEl = document.getElementById("changelogList");
+  listEl.innerHTML = CONFIG.CHANGELOG.map(item => `<li>${item}</li>`).join("");
 
-/* ===== NHIỆM VỤ ===== */
-let completedSteps = 0;
-const TOTAL_STEPS = 4;
+  // button
+  const btn = document.getElementById("updateBtn");
+  const url = resolveUpdateUrl();
+  btn.href = url;
+  btn.addEventListener("click", (e) => {
+    // để lại chỗ gắn tracking nếu cần trước khi điều hướng
+    window.location.href = url;
+  });
 
-function completeTask(step, url) {
-  window.open(url, '_blank');
-  const btn = document.getElementById('task' + step);
-  const statusSpan = document.getElementById('status-task' + step);
-  const iconRight = document.getElementById('icon-task' + step);
-  btn.disabled = true;
-
-  let countdown = 3;
-  statusSpan.textContent = 'Chờ ' + countdown + 's';
-  const timer = setInterval(() => {
-    countdown--;
-    if (countdown > 0) {
-      statusSpan.textContent = 'Chờ ' + countdown + 's';
-    } else {
-      clearInterval(timer);
-      btn.classList.add('done');
-      statusSpan.textContent = '';
-      iconRight.className = 'fa-solid fa-check item-chevron';
-      completedSteps++;
-      document.getElementById('progressText').textContent = completedSteps + ' / ' + TOTAL_STEPS;
-      document.getElementById('progressFill').style.width = (completedSteps / TOTAL_STEPS) * 100 + '%';
-
-      if (step < TOTAL_STEPS) {
-        document.getElementById('task' + (step + 1)).disabled = false;
-      } else {
-        [1, 2].forEach(num => {
-          const unlockBtn = document.getElementById('unlockBtn' + num);
-          if (unlockBtn) {
-            unlockBtn.disabled = false;
-            unlockBtn.classList.add('active');
-            document.getElementById('unlockIcon' + num).className = 'fa-solid fa-lock-open';
-          }
-        });
+  // footnote / auto redirect
+  const foot = document.getElementById("footNote");
+  if (CONFIG.AUTO_REDIRECT_SECONDS > 0){
+    let remaining = CONFIG.AUTO_REDIRECT_SECONDS;
+    foot.innerHTML = `Tự động chuyển sau <b>${remaining}s</b>`;
+    const timer = setInterval(() => {
+      remaining -= 1;
+      if (remaining <= 0){
+        clearInterval(timer);
+        window.location.href = url;
+        return;
       }
-    }
-  }, 1000);
+      foot.innerHTML = `Tự động chuyển sau <b>${remaining}s</b>`;
+    }, 1000);
+  } else {
+    foot.textContent = "";
+  }
 }
 
-/* ===== MODAL VIDEO ===== */
-function openVideo(videoUrl) {
-  document.getElementById('youtubeIframe').src = videoUrl + '?autoplay=1';
-  document.getElementById('videoModal').style.display = 'flex';
+function blockBack(){
+  if (!CONFIG.BLOCK_BACK_BUTTON) return;
+  history.pushState(null, "", location.href);
+  window.addEventListener("popstate", () => {
+    history.pushState(null, "", location.href);
+  });
 }
-function closeVideo() {
-  document.getElementById('videoModal').style.display = 'none';
-  document.getElementById('youtubeIframe').src = '';
-}
+
+render();
+blockBack();
 </script>
-<script src="https://pl26947935.effectivecpmnetwork.com/a3/ff/2e/a3ff2eb3e4415ce00aed34eeedefbeee.js"></script>
 
 </body>
 </html>
